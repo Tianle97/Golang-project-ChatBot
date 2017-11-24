@@ -1,10 +1,13 @@
+ // Tianle Shu 
+ //G00353418
+ 
  package chat
 
  import(
 
 	 "bufio"
 	 "fmt"
-	 "log"
+	// "log"
 	 "math/rand"
 	 "os"
 	 "regexp"
@@ -38,7 +41,7 @@
 
 	  file, err := os.Open("./reply/reply.dat")
 	  if err != nil {
-		  log.Fatal(err)
+		  panic(err)
 	  }
 
 	  defer file.Close()
@@ -51,9 +54,9 @@
 					scanner.Scan()
 					replacementsStr := scanner.Text()
 
-					answerRow := strings.Split(replyStr,";")
-					resp := ElizaFormiles("(?!)"+replyStr, answerRow)
-					entireReply = append(entireReply,resp)
+					answerRow := strings.Split(replacementsStr,";")
+					re := ElizaFormiles("(?!)"+replyStr, answerRow)
+					entireReply = append(entireReply,re)
 
 	  }
 
@@ -68,21 +71,24 @@
 			
 			reflections = map[string]string { 
 					
-					"am":     "are",
-					"was":    "were",
 					"i":      "you",
+					"you":    "me",
+					"me":     "you",
+					"are":    "am",
+					"am":     "are",
+					"my":     "your",
 					"i'd":    "you would",
 					"i've":   "you have",
 					"i'll":   "you will",
-					"my":     "your",
-					"are":    "am",
+					"was":    "were",
 					"you've": "I have",
 					"you'll": "I will",
 					"your":   "my",
 					"yours":  "mine",
-					"you":    "me",
-					"me":     "you",
+			
 			}
+					
+					
 
 		  }
 
@@ -112,15 +118,14 @@
   
 
 
-
- func RespondTo(input string) string {
+ func RespondTo(text string) string {
 		 responses := ReadReplysFormFile()
 		 
 		for _, re := range responses{
 
-			if matches := re.original.FileStringSubmatch(input); matches != nil{
+			if re.original.MatchString(text){
 
-					output := re.replacements[rand.Intn(len(re.replacements))]
+					output := re.original.FindStringSubmatch(text)
 					
 					captured := output[1]
 					//boundaries := regexp.MustCompile(`[\s,.?!]+`)
@@ -132,7 +137,7 @@
 
 					if strings.Contains(replyAnswer,"%s"){
 
-						replyAnswer = fmt.Split(replyAnswer,captured)
+						replyAnswer = fmt.Sprintf(replyAnswer,captured)
 					}
 
 					return replyAnswer

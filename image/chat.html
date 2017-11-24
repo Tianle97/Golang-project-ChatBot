@@ -130,12 +130,12 @@
  </style>
  <script>
   window.onload = function(){
-   var arrIcon = ['E:\GOOGLE\GMIT\Mycourses\Ian\project\panda.jpg','E:\GOOGLE\GMIT\Mycourses\Ian\project\minion.jpg'];    //add two picture for head sculpture
+   var arrIcon = ['panda.jpg','minion.jpg'];    //add two picture for head sculpture
    var num = 0;                       //控制头像改变
    var iNow = -1;                     //用来累加改变左右浮动
    var icon = document.getElementById('icon').getElementsByTagName('img');   
    var btn = document.getElementById('btn');                  //add a buttom
-   var input = document.getElementById('text');                //add a text for input words
+   var text = document.getElementById('text');                //add a text for input words
    var content = document.getElementsByTagName('ul')[0];      // chat record
    var img = content.getElementsByTagName('img');
    var span = content.getElementsByTagName('span');
@@ -177,9 +177,9 @@
   <ul class="content"></ul>
   <div class="footer">
    <div id="icon">
-    <img src="E:\GOOGLE\GMIT\Mycourses\Ian\project\panda.jpg" alt="">
+    <img src="panda.jpg" alt="">
    </div>
-   <input id="input" type="text" placeholder="talking...">
+   <input id="text"  placeholder="talking...">
    <span id="btn">send</span>
   </div>
  </div>

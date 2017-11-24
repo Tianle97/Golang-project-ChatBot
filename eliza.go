@@ -2,11 +2,18 @@ package main
 
 import (
 
-	"log"
+	"fmt"
 	"net/http"
 	"./chat"
-
+    "log"
 )
+
+func HandleResponse(w http.ResponseWriter, request *http.Request) {
+	text := request.URL.Query().Get("text")
+	answer := chat.RespondTo(text) // takes the input we got from the request, and sends it to the Ask function
+	fmt.Fprintf(w, answer)    // writes the result back into the ResponseWriter
+
+}
 
 func main() {
 
@@ -16,13 +23,7 @@ func main() {
 
 			http.HandleFunc("/", fileServer)
 
-			http.HandleFunc("/conversation", func(w http.ResponseWriter, r *http.Request) {
-					input := r.URL.Query()Get("input")
-
-					relacement := chat.RespondTo(input)
-
-					fmt.Fprintf(w,replacement)
-			})
+			http.HandleFunc("/conversation", HandleResponse)
 
 			// Start the server at http://localhost:9090
 			log.Fatal(http.ListenAndServe(":9090", nil))
