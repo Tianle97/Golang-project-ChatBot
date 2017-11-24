@@ -16,7 +16,7 @@ create a chatbot use Golang.
 
 * 3.reply folder, including trply.dat that use reply your question or sentences.
 
-* 4.chat.go, including my main method.deal with http requests.
+* 4.wechat.go, including my main method.deal with http requests.
 
 
 
@@ -35,7 +35,7 @@ create a chatbot use Golang.
 
 + 2. go build chat.go
 
-* 3. go run chat.go
+* 3. go run wechat.go
 
 * 4. Open yuor web browser and input url "localhost:9090"
 
