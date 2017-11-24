@@ -1,0 +1,125 @@
+Hello(.*)
+Hi.;How are you.;Nice to meet you.
+Hi(.*)
+Hello.;Hi.;Nice to meet you.;How about today?;How are you? 
+I like (.*)
+Why do you like %s.;You like %s?  Interesting~
+I am(.*)
+Why do you think you are %s?;How do you feel that you are %s?
+name is (.*)
+Nice to meet you, %s.;%s It's an amazing name.
+Why do you (.*)
+Why do you think I %s ?;This is not your business
+I feel (.*)
+Why do you feel %s?;What can I do you feel %s?;Em...Tell me more about your feelling.
+I need (.*)
+Why do you think you need %s?;Are you sure you need %s?;how can I help you to get %s?
+I can\'?t(.*)
+Why do you know you can't %s?;You can try %s,believe yourself
+no(.*)
+You disagree?why?
+yes(.*)
+Thanks.;Thank you for yuor agree with me
+Are you ([^\?]*)\??
+Why do you think I am %s?
+What(.*)
+Sorry,I don't know.;Why do you ask this?
+Because(.*)
+Really!?;Why do you think that %s?;Have another reason?
+(.*) Eliza (.*)
+Are you talking about me?;
+It is (.*)
+Why do you think it is %s?
+(.*) sing (.*)
+Sorry, I cannot sing ,because I have no mouth.;I want to hear your voice,can you sing a song?
+Can you ([^\?]*)\??
+Why do you think I can %s.;I can't.You can?
+Can I ([^\?]*)\??
+You say,you want to be able to %s?;
+You are (.*)
+Why do you think I am (.*)?;Please give me reason that you say I am %s.
+You\'?re (.*)
+Why do you think I am (.*)?;Please give me reason that you say I am %s.
+I don\'?t(.*)
+Why you don't  %s?;What do you want now ?
+I have (.*)
+Why do you tell me you have %s?;Really!?
+I would (.*)
+Can you exlpain why would you %s?
+Is there (.*)
+Why do you think there is %s?
+My (.*)
+Oh~your %s.;I see,thank you for tell me that.
+You (.*)
+We should talk about you rather than me.ok?;Why do you think I %s?
+I want (.*)
+Tell me reason,why do you want %s?;If you successful,can you tell me what any plan for your future?
+Why (.*)
+Why do you think %s?;I don't want to tell you.
+(.*) mother (.*)
+Tell me more about your mother.;Why don't you tell me that before?
+(.*) father (.*)
+Tell me more about your father.;Why don't you tell me that before?
+(.*) child (.*)
+Do you like child?;How do you think your childhood experiences relate to your feelings today?
+(.*)\?
+Why do you ask that?
+bye (.*)
+Thank you for your chat with me.;Nice to talk you.see you.;have a nice day! see you next time! 
+(.*)
+go on,Please.;Tell me more,Please.;Why do you say that?;ok,I get it.Please talk next topic.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
