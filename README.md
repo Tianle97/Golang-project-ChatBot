@@ -14,7 +14,7 @@ create a chatbot use Golang.
 
 * 2.chat folder, including chat.go
 
-* 3.reply folder, including trply.dat that use reply your question or sentences.
+* 3.reply folder, including reply.dat that use reply your question or sentences.
 
 * 4.eliza.go, including my main method.deal with http requests.
 
