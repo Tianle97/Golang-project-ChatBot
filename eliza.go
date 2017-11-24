@@ -1,3 +1,6 @@
+//Tianle Shu
+//G00353418
+
 package main
 
 import (
@@ -10,7 +13,7 @@ import (
 
 func HandleResponse(w http.ResponseWriter, request *http.Request) {
 	text := request.URL.Query().Get("text")
-	answer := chat.RespondTo(text) // takes the input we got from the request, and sends it to the Ask function
+	answer := chat.RespondTo(text) // takes the text we got from the request, and sends it to the Ask function
 	fmt.Fprintf(w, answer)    // writes the result back into the ResponseWriter
 
 }

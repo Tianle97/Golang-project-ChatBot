@@ -16,9 +16,9 @@
  )
 
 
- type replys struct {
+ type replys struct {    //a struct called replys, contains a compiled regular expression 
 	 original *regexp.Regexp
-	 replacements []string
+	 replacements []string      //a string array of resplacements from regexp package
  }
 
  func ElizaFormiles(reply string, replacements []string) replys{
@@ -35,7 +35,7 @@
 		}
 	
 
- func ReadReplysFormFile() []replys {
+ func ReadReplysFormFile() []replys {   //This function reads the reply.dat
   
 	  entireReply := []replys{}
 
@@ -44,14 +44,14 @@
 		  panic(err)
 	  }
 
-	  defer file.Close()
+	  defer file.Close() //the file eists
 
-	  scanner := bufio.NewScanner(file)
+	  scanner := bufio.NewScanner(file) //read the file every line
 	  
 	  for scanner.Scan(){
 
 					replyStr := scanner.Text()
-					scanner.Scan()
+					scanner.Scan()     //move to next line
 					replacementsStr := scanner.Text()
 
 					answerRow := strings.Split(replacementsStr,";")
@@ -112,7 +112,7 @@
 			rand.Seed(time.Now().UnixNano())
 			i := rand.Intn(len(replacements))
 			return replacements[i]
-  }
+  }   //This function make then reply sentences rand
 
 
   
@@ -144,7 +144,7 @@
 			}
 		}
 
-		return "I cannot understand what your mean."
+		return "I cannot understand what your mean."  
  } 
 
 
