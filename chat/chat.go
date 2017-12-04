@@ -1,3 +1,5 @@
+//Tianle SHU G00353418
+
 package chat
 
 import (
@@ -10,75 +12,93 @@ import (
 	"time"
 )
 
-var reflections map[string]string //map of strings of type string
-//a struct called response, contains a compiled regular expression and a string array
-//of answers as from regexp package
-type response struct {
+
+//it is a struct called reply
+type reply struct {
 	rex     *regexp.Regexp
+	//a string array of answers as from regexp package
 	answers []string
-} //struct
+} 
 
-//This function reads in a string array of answers and a istring of type patter.
-// It then returns an instance of response with these loaded in.
-func newResponse(pattern string, answers []string) response {
-	response := response{}
-	rex := regexp.MustCompile(pattern) //rex is the regular expression
-	response.rex = rex
-	response.answers = answers
-	return response
-} //newResponse
+//This function reads in a string array of answers and a is tring of type patter.
+// It then returns an instance of reply with these loaded in.
+func newReply(line string, answers []string) reply {
+	reply := reply{}
+	rex := regexp.MustCompile(line) //rex is the regular expression
+	reply.rex = rex
+	reply.answers = answers
+	return reply
+} //newReply
 
-//buildResponseList reads an array of Responses from a text file.
+
+
+//buildReplyList reads an array of Replys from a text file.
 //It takes no arguments
-func buildResponseList() []response {
+//buildReplyList
+func buildReplyList() []reply {
 
-	allResponses := []response{}
-	//File takes data from my patterns.dat. If anything goes wrong itwill exit
-	file, err := os.Open("./reply/reply.dat") //reply file from static
-	if err != nil {                             // an error
-		panic(err) // escape
-	} //if err
+	allReplys := []reply{}
+	//File takes words from my reply.dat. If anything goes wrong it will exit
+	file, err := os.Open("./reply/reply.dat") //open my reply.dat
+	// an error
+	//if err
+	if err != nil {                             
+		 // of err and then will escape
+		panic(err)
+	} 
 
 	// The file exists!
-	defer file.Close() // this will be called AFTER this function.
+	// this will be called by after this function.
+	defer file.Close() 
 
-	//read the file line by line
+	//read line by line in this file
 	scanner := bufio.NewScanner(file)
-
+	 
+	//scanner
 	for scanner.Scan() {
 
-		patternStr := scanner.Text()
-		scanner.Scan() // move onto the next line which holds the answers
-		answersAsStr := scanner.Text()
+		readLine := scanner.Text()
+		// move to the next line and get anwser
+		scanner.Scan() 
+		getAnswer := scanner.Text()
+		//In reply.dat the robort replys to one input are seperated by ";"
+		answerList := strings.Split(getAnswer, ";") 
 
-		answerList := strings.Split(answersAsStr, ";") //In my patterns the various eliza responses to one input are seperated by ";"
-		//so the possible responses are "split" by the ";"
-		resp := newResponse("(?i)"+patternStr, answerList) //this regex will allow for any case (upper&lower) entered by the user
-		allResponses = append(allResponses, resp)
-	} //scanner
+		// the possible replys are "split" by the ";"
+		//this regex will allow for any case (upper&lower) entered by the user
+		resp := newReply("(?i)"+readLine, answerList) 
 
-	//return the allResponses array
-	return allResponses
-} //buildResponse
+		allReplys = append(allReplys, resp)
+	}
 
+	//return the allReplys array
+	return allReplys
+} 
+
+
+//getRandomAnswer
 func getRandomAnswer(answers []string) string {
-	rand.Seed(time.Now().UnixNano()) // seed to make it return different values.
-	index := rand.Intn(len(answers)) // Intn generates a number between 0 and num - 1
-	return answers[index]            // can be any element
-}//getRandomAnswer
+	 // seed to make it return different values.
+	rand.Seed(time.Now().UnixNano())
+	// Intn generates a number between 0 and num - 1
+	index := rand.Intn(len(answers)) 
+	return answers[index]           
+}
 
-func subWords(original string) string {
+
+//map of strings of type string 
+var reflections map[string]string 
+
+func Reflect(original string) string {
 	//reflections from https://www.smallsurething.com/implementing-the-famous-eliza-chatbot-in-python/
-
-	// Eliza will try to match the regular expressions in the order they appear in 
-	// this file, and stop at the first match. Therefore earlier ones have precedence.
-	//They are already case-insensitive as I've dealt with that at user input in buildResponses
-	if reflections == nil { // map hasn't been made yet
-		reflections = map[string]string{ // will only happen once.
+	// map hasn't been made yet
+	if reflections == nil { 
+		//reflections
+		reflections = map[string]string{ 
 			"am":     "are",
 			"was":    "were",
 			"i":      "you",
-			"you":	  "i",
+			"you":	  "me",
 			"i'd":    "you would",
 			"i've":   "you have",
 			"i'll":   "you will",
@@ -89,20 +109,18 @@ func subWords(original string) string {
 			"you'll": "I will",
 			"your":   "my",
 			"yours":  "mine",
-			//"you":    "me",
 			"me":     "you",
 			"some":	  "any",
-		}//reflections
-	}//if, if I get to here reflections map is populated.
+		}
+	}
 
 	words := strings.Split(original, " ")
 
 	for index, word := range words {
-		// we want to change the word if it's in the map
+		//  if it's in the map we can change the word
 		val, ok := reflections[word]
-		if ok { // value WAS in the map
-			// we want to swap with the value
-			words[index] = val // eg. you -> me
+		if ok { 
+			words[index] = val // eg. your == mine
 		}
 	}
 
@@ -111,17 +129,20 @@ func subWords(original string) string {
 
 func Ask(userInput string) string {
 
-	// My name is bob
-	responses := buildResponseList()
-	//fmt.Println(responses)
-	for _, resp := range responses { // look at every single response/pattern/answers
-		//fmt.Println("User input: " + userInput)
+
+	replys := buildReplyList()
+	// look at every single reply/reply/answers
+	
+    //for	
+	for _, resp := range replys { 
+		
+		//if
 		if resp.rex.MatchString(userInput) {
 			match := resp.rex.FindStringSubmatch(userInput)
 			//match[0] is full match, match[1] is the capture group
 			captured := match[1]
 
-			captured = subWords(captured)
+			captured = Reflect(captured)
 
 			formatAnswer := getRandomAnswer(resp.answers) // get random element.
 
@@ -130,11 +151,11 @@ func Ask(userInput string) string {
 			}
 			return formatAnswer
 
-		} // if
+		} 
 
-	} // for
+	}
 
 	// if we're down here, it means there were no matches;
-	return "Sorry I was busy." // catch all.
+	return "Sorry I cannot understand."
 
 }
