@@ -1,0 +1,47 @@
+h3 {
+    text-align: center;
+    font-family: 'Times New Roman';
+    font-size: 50px;
+    font-weight: 5px;
+    color: #F10606;
+}
+
+body {
+    width: 100%;
+    background-image: url("/img/baymax.jpg");
+    background-position: center;
+    min-height: 100px;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+   
+}
+
+.scroller {
+    overflow: auto; 
+}
+
+#right {
+    background-color:lightblue;
+    text-align: right;
+    
+}
+
+#left {
+    background-color:lightcoral;  
+    text-align: left;
+}
+
+li {
+    display: block; 
+    margin: 10px;
+    margin-left: 390px;
+    margin-right: 390px;
+}
+
+.left strong {
+    color: darkred;
+}
+
+.right strong {
+    color: darkslateblue;
+}
