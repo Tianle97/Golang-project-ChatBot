@@ -1,152 +1,140 @@
- // Tianle Shu 
- //G00353418
- 
- package chat
+package chat
 
- import(
+import (
+	"bufio"
+	"fmt"
+	"math/rand"
+	"os"
+	"regexp"
+	"strings"
+	"time"
+)
 
-	 "bufio"
-	 "fmt"
-	// "log"
-	 "math/rand"
-	 "os"
-	 "regexp"
-	 "strings"
-	 "time"
- )
+var reflections map[string]string //map of strings of type string
+//a struct called response, contains a compiled regular expression and a string array
+//of answers as from regexp package
+type response struct {
+	rex     *regexp.Regexp
+	answers []string
+} //struct
 
+//This function reads in a string array of answers and a istring of type patter.
+// It then returns an instance of response with these loaded in.
+func newResponse(pattern string, answers []string) response {
+	response := response{}
+	rex := regexp.MustCompile(pattern) //rex is the regular expression
+	response.rex = rex
+	response.answers = answers
+	return response
+} //newResponse
 
- type replys struct {    //a struct called replys, contains a compiled regular expression 
-	 original *regexp.Regexp
-	 replacements []string      //a string array of resplacements from regexp package
- }
+//buildResponseList reads an array of Responses from a text file.
+//It takes no arguments
+func buildResponseList() []response {
 
- func ElizaFormiles(reply string, replacements []string) replys{
-	
-				replys := replys{}
-				original := regexp.MustCompile(reply)
-				replys.original = original
-				//eliza.replys = ReadReplyFormFile(replyPath)
-				replys.replacements = replacements
-				
-				return replys
-	
-	
+	allResponses := []response{}
+	//File takes data from my patterns.dat. If anything goes wrong itwill exit
+	file, err := os.Open("./reply/reply.dat") //reply file from static
+	if err != nil {                             // an error
+		panic(err) // escape
+	} //if err
+
+	// The file exists!
+	defer file.Close() // this will be called AFTER this function.
+
+	//read the file line by line
+	scanner := bufio.NewScanner(file)
+
+	for scanner.Scan() {
+
+		patternStr := scanner.Text()
+		scanner.Scan() // move onto the next line which holds the answers
+		answersAsStr := scanner.Text()
+
+		answerList := strings.Split(answersAsStr, ";") //In my patterns the various eliza responses to one input are seperated by ";"
+		//so the possible responses are "split" by the ";"
+		resp := newResponse("(?i)"+patternStr, answerList) //this regex will allow for any case (upper&lower) entered by the user
+		allResponses = append(allResponses, resp)
+	} //scanner
+
+	//return the allResponses array
+	return allResponses
+} //buildResponse
+
+func getRandomAnswer(answers []string) string {
+	rand.Seed(time.Now().UnixNano()) // seed to make it return different values.
+	index := rand.Intn(len(answers)) // Intn generates a number between 0 and num - 1
+	return answers[index]            // can be any element
+}//getRandomAnswer
+
+func subWords(original string) string {
+	//reflections from https://www.smallsurething.com/implementing-the-famous-eliza-chatbot-in-python/
+
+	// Eliza will try to match the regular expressions in the order they appear in 
+	// this file, and stop at the first match. Therefore earlier ones have precedence.
+	//They are already case-insensitive as I've dealt with that at user input in buildResponses
+	if reflections == nil { // map hasn't been made yet
+		reflections = map[string]string{ // will only happen once.
+			"am":     "are",
+			"was":    "were",
+			"i":      "you",
+			"you":	  "i",
+			"i'd":    "you would",
+			"i've":   "you have",
+			"i'll":   "you will",
+			"my":     "your",
+			"are":    "am",
+			"myself": "yourself",
+			"you've": "I have",
+			"you'll": "I will",
+			"your":   "my",
+			"yours":  "mine",
+			//"you":    "me",
+			"me":     "you",
+			"some":	  "any",
+		}//reflections
+	}//if, if I get to here reflections map is populated.
+
+	words := strings.Split(original, " ")
+
+	for index, word := range words {
+		// we want to change the word if it's in the map
+		val, ok := reflections[word]
+		if ok { // value WAS in the map
+			// we want to swap with the value
+			words[index] = val // eg. you -> me
 		}
-	
+	}
 
- func ReadReplysFormFile() []replys {   //This function reads the reply.dat
-  
-	  entireReply := []replys{}
+	return strings.Join(words, " ")
+}
 
-	  file, err := os.Open("./reply/reply.dat")
-	  if err != nil {
-		  panic(err)
-	  }
+func Ask(userInput string) string {
 
-	  defer file.Close() //the file eists
+	// My name is bob
+	responses := buildResponseList()
+	//fmt.Println(responses)
+	for _, resp := range responses { // look at every single response/pattern/answers
+		//fmt.Println("User input: " + userInput)
+		if resp.rex.MatchString(userInput) {
+			match := resp.rex.FindStringSubmatch(userInput)
+			//match[0] is full match, match[1] is the capture group
+			captured := match[1]
 
-	  scanner := bufio.NewScanner(file) //read the file every line
-	  
-	  for scanner.Scan(){
+			captured = subWords(captured)
 
-					replyStr := scanner.Text()
-					scanner.Scan()     //move to next line
-					replacementsStr := scanner.Text()
+			formatAnswer := getRandomAnswer(resp.answers) // get random element.
 
-					answerRow := strings.Split(replacementsStr,";")
-					re := ElizaFormiles("(?!)"+replyStr, answerRow)
-					entireReply = append(entireReply,re)
-
-	  }
-
-	  return entireReply
- }
-
-  var reflections map[string]string    //map of strings of type string
-  func Reflect(litter string) string{
-
-
-	if reflections == nil { 
-			
-			reflections = map[string]string { 
-					
-					"i":      "you",
-					"you":    "me",
-					"me":     "you",
-					"are":    "am",
-					"am":     "are",
-					"my":     "your",
-					"i'd":    "you would",
-					"i've":   "you have",
-					"i'll":   "you will",
-					"was":    "were",
-					"you've": "I have",
-					"you'll": "I will",
-					"your":   "my",
-					"yours":  "mine",
-			
+			if strings.Contains(formatAnswer, "%s") { // string needs to be formatted, %s will be sub target
+				formatAnswer = fmt.Sprintf(formatAnswer, captured)
 			}
-					
-					
+			return formatAnswer
 
-		  }
+		} // if
 
-		  sentences := strings.Split(litter," " )
+	} // for
 
-		  for i, sentence := range sentences {
+	// if we're down here, it means there were no matches;
+	return "Sorry I was busy." // catch all.
 
-				f,s := reflections[sentence]
-				if s{
-						sentences[i] = f
-				}
-			}
-
-				  return strings.Join(sentences," ")
-		}
-		  
-	
-
-  func ObtainRandonAnswer(replacements [] string) string{
-
-			rand.Seed(time.Now().UnixNano())
-			i := rand.Intn(len(replacements))
-			return replacements[i]
-  }   //This function make then reply sentences rand
-
-
-  
-
-
- func RespondTo(text string) string {
-		 responses := ReadReplysFormFile()
-		 
-		for _, re := range responses{
-
-			if re.original.MatchString(text){
-
-					output := re.original.FindStringSubmatch(text)
-					
-					captured := output[1]
-					//boundaries := regexp.MustCompile(`[\s,.?!]+`)
-
-					captured = Reflect(captured)
-					
-					replyAnswer := ObtainRandonAnswer(re.replacements)
-				
-
-					if strings.Contains(replyAnswer,"%s"){
-
-						replyAnswer = fmt.Sprintf(replyAnswer,captured)
-					}
-
-					return replyAnswer
-			}
-		}
-
-		return "I cannot understand what your mean."  
- } 
-
-
-
-
+}
